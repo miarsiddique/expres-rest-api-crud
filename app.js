@@ -26,6 +26,20 @@ app.use('/users', usersRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+/* app.use(function (req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
+app.use((error, req, res, next) => {
+  res.status(error.status || 500).json({
+    'errors': {
+      'message': error.message,
+      'status_code': error.status
+    }
+  });
+}); */
 
 // error handler
 app.use(function(err, req, res, next) {
