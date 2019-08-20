@@ -15,21 +15,40 @@ module.exports = {
          mobile: req.body.mobile,
       }
       const user = new User(userData);
-
-      db.query(user.addUser(), (err, result) => {
+      db.query(User.getUserByUserName(userData.username), (err, data) => {
          if (err) {
-            res.status(400).json({
+            res.status(401).json({
                'error': err.message,
-               'error_line': err.files,
-            })
-         };
-
-         db.query(User.getUserById(result.insertId), (err, userData) => {
-            console.log(userData[0]);
-            res.status(200).json({
-               'data': userData[0],
             });
-         })
+         }
+
+         if (data.length >= 1) {
+            if (data[0].username === userData.username) {
+               res.status(401).json({
+                  'message': 'User already exists',
+               });
+            }
+         } else {
+            db.query(user.addUser(), (err, result) => {
+               if (err) {
+                  res.status(400).json({
+                     'error': err.message,
+                  })
+               };
+
+               db.query(User.getUserById(result.insertId), (err, data) => {
+                  if (err) {
+                     res.status(401).json({
+                        'errors': err.message,
+                     })
+                  }
+
+                  res.status(200).json({
+                     'data': data[0],
+                  });
+               })
+            });
+         }
       });
    },
 
