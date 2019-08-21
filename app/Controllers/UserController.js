@@ -1,5 +1,7 @@
 const db = require('../../migration');
 const User = require('../Models/User');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 module.exports = {
 
@@ -7,13 +9,18 @@ module.exports = {
     * store user details.
     */
    userStore: (req, res, next) => {
+      var salt = bcrypt.genSaltSync(saltRounds);
+      var hash = bcrypt.hashSync(req.body.password, salt);
+      var password = hash;
+
       const userData = {
          firstname: req.body.firstname,
          lastname: req.body.lastname,
          username: req.body.username,
-         password: req.body.password,
+         password: password,
          mobile: req.body.mobile,
       }
+
       const user = new User(userData);
       db.query(User.getUserByUserName(userData.username), (err, data) => {
          if (err) {
@@ -44,7 +51,13 @@ module.exports = {
                   }
 
                   res.status(200).json({
-                     'data': data[0],
+                     'data': {
+                        id: data[0].id,
+                        firstname: data[0].firstname,
+                        lastname: data[0].lastname,
+                        username: data[0].username,
+                        mobile: data[0].mobile,
+                     },
                   });
                })
             });

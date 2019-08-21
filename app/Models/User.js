@@ -30,7 +30,7 @@ class User {
       return `SELECT * FROM users`;
    }
 
-   static getUserByUserName(username) {
+   static getUserByUserName(username, callback) {
       return  `SELECT * FROM users WHERE username = '${username}'`;
    }
 }
