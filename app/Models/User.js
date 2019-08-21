@@ -1,3 +1,4 @@
+const db = require('../../migration');
 class User {
 
    constructor(data) {
@@ -18,7 +19,6 @@ class User {
    }
 
    static getUserById(id) {
-      console.log(id);
       return `SELECT * FROM users WHERE id = ${id}`;
    }
 
@@ -28,6 +28,10 @@ class User {
 
    static getAllUsers() {
       return `SELECT * FROM users`;
+   }
+
+   static getUserByUserName(username, callback) {
+      return  `SELECT * FROM users WHERE username = '${username}'`;
    }
 }
 
