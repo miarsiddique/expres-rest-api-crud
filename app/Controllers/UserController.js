@@ -10,9 +10,7 @@ module.exports = {
     */
    userStore: (req, res, next) => {
       var salt = bcrypt.genSaltSync(saltRounds);
-      var hash = bcrypt.hashSync(req.body.password, salt);
-      var password = hash;
-
+      var password = bcrypt.hashSync(req.body.password, salt);
       const userData = {
          firstname: req.body.firstname,
          lastname: req.body.lastname,
